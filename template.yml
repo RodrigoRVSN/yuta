@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An example AWS Serverless Application.
+
+Resources:
+  MyApi:
+    Type: 'AWS::Serverless::Api'
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes:
+        - '*/*'
+
+  MyFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: yuta # Set your handler here
+      Runtime: go1.x # Specify the Go runtime version
+      CodeUri: . # Path to your Go code
+      MemorySize: 128 # Set the desired memory size
+      Timeout: 10 # Set the function timeout
+      Events:
+        ApiEvent:
+          Type: Api # This connects the Lambda to an API Gateway
+          Properties:
+            Path: /myresource
+            Method: POST # Define the HTTP method (e.g., GET, POST)
+
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL"
+    Value:
+      Fn::Sub: "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/myresource"
