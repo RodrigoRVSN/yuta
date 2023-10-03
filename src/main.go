@@ -23,14 +23,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	fileHeaders, headersError := GetHeaders(event, 10485760)
 
 	if headersError != nil {
-		fmt.Println("Failed to upload file to S3 reading headers:", headersError)
-		return events.APIGatewayProxyResponse{
-			StatusCode: 400,
-			Headers: map[string]string{
-				"Content-Type": "application/json",
-			},
-			Body: `{"message": "Error uploading file to S3"}`,
-		}, nil
+		return BadRequestFeedback("Error reading headers: " + headersError.Error()), nil
 	}
 
 	fileName := uuid.New().String()
@@ -40,25 +33,10 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 	_, uploadError := UploadFile(fileHeaders[0], awsRegion, bucketName, fileName)
 
 	if uploadError != nil {
-		fmt.Println("Failed to upload file to S3 uploading file:", uploadError)
-		return events.APIGatewayProxyResponse{
-			StatusCode: 400,
-			Headers: map[string]string{
-				"Content-Type": "application/json",
-			},
-			Body: `{"message": "Error uploading file to S3"}`,
-		}, nil
+		return BadRequestFeedback("Error uploading file to S3: " + uploadError.Error()), nil
 	}
 
 	cloudFrontURL := fmt.Sprintf("%s/%s", "https://d1dlccvqvhrnl1.cloudfront.net", fileName)
 
-	fmt.Println("✅ File uploaded successfully. CloudFront URL:", cloudFrontURL)
-
-	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Body: `{"message": "File uploaded successfully"}`,
-	}, nil
+	return OkFeedback("✅ File uploaded successfully to CDN: " + cloudFrontURL), nil
 }
