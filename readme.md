@@ -2,12 +2,12 @@ Sending a request to API Gateway triggers the Lambda function, which will upload
 
 > Flow at Excalidraw
 
-![image](https://github.com/RodrigoRVSN/yuta/assets/75763403/0820a281-e9eb-4c13-9437-4347d13f3819)
+![image](https://github.com/RodrigoRVSN/yuta/assets/75763403/51200a3f-cb75-448b-9e93-654011d7d442)
+
 
 > Request example
 
-![image](https://github.com/RodrigoRVSN/yuta/assets/75763403/fd3f3b32-a4a1-4651-811e-13ebe6efbb59)
-
+![image](https://github.com/RodrigoRVSN/yuta/assets/75763403/87c0f03f-e5e8-43e5-a519-8a823ff90a84)
 
 # Technologies
 
