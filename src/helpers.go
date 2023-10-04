@@ -4,7 +4,7 @@ import "github.com/aws/aws-lambda-go/events"
 
 func OkFeedback(message string) events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
+		StatusCode: StatusOK,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
@@ -15,7 +15,7 @@ func OkFeedback(message string) events.APIGatewayProxyResponse {
 
 func BadRequestFeedback(message string) events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
-		StatusCode: 400,
+		StatusCode: StatusBadRequest,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
