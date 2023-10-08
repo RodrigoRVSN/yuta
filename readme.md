@@ -9,6 +9,10 @@ Sending a request to API Gateway triggers the Lambda function, which will upload
 
 ![image](https://github.com/RodrigoRVSN/yuta/assets/75763403/87c0f03f-e5e8-43e5-a519-8a823ff90a84)
 
+# How to reproduce
+
+- You can see this [post](https://dev.to/rodrigorvsn/retrieve-cdn-link-of-a-file-sent-to-s3-by-lambda-function-on-aws-5607) to have a more step-by-step guide!
+
 # Technologies
 
 - Golang
