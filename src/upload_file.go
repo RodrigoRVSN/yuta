@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"mime/multipart"
-	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -15,41 +14,40 @@ type UploadRes struct {
 	S3URL  string
 }
 
-func UploadFile(fileHeader *multipart.FileHeader, region, bucket, fileName string) (*UploadRes, error) {
+func UploadFile(fileHeader *multipart.FileHeader, region string, bucket string) (string, error) {
 	file, openError := fileHeader.Open()
 
 	if openError != nil {
-		return nil, openError
+		return "", openError
 	}
 
 	var fileContents bytes.Buffer
 	_, readError := fileContents.ReadFrom(file)
 	if readError != nil {
-		return nil, readError
+		return "", readError
 	}
 
 	awsSession, sessionError := session.NewSession(&aws.Config{
-		Region: aws.String(region)},
-	)
+		Region: aws.String(region),
+	})
 
 	if sessionError != nil {
-		return nil, sessionError
+		return "", sessionError
 	}
 
 	uploader := s3manager.NewUploader(awsSession)
 
-	uploadOutput, uploadError := uploader.Upload(&s3manager.UploadInput{
+	fileName := fileHeader.Filename
+
+	_, uploadError := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(fileName),
 		Body:   bytes.NewReader(fileContents.Bytes()),
 	})
 
 	if uploadError != nil {
-		return nil, uploadError
+		return "", uploadError
 	}
 
-	return &UploadRes{
-		S3Path: filepath.Join(bucket, fileName),
-		S3URL:  uploadOutput.Location,
-	}, nil
+	return fileName, nil
 }
